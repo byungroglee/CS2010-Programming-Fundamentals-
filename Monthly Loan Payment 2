@@ -1,0 +1,100 @@
+//==============================================================================
+// Program: The purpose of this program is to calculate monthly loan payments
+// Process: Obtain input from user: loan type, length of loan, amount of loan
+//          and compute monthly payment.
+// Results: Display details of the loan along with the calculated payment, total
+//          paid over the life of the loan, and total interest paid.
+// 
+// Class:   CS2010
+// Section: 100x
+// Term:    Spring/Fall202x
+// Author:  Byung Rog Lee
+//
+// Reflection: I was not sure how to use boolean function. But, through this 
+//             program, I understood how to use this function.
+//==============================================================================
+
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+using namespace std;
+
+int main() {
+    // Declaration Section (Constants)
+    const double AUTO_36_APR = 7.29;
+    const double AUTO_48_APR = 8.10;
+    const double AUTO_60_APR = 7.99;
+    const double MORT_15_APR = 5.51;
+    const double MORT_20_APR = 6.46;
+    const double MORT_30_APR = 7.21;
+    const double ADDITIONAL_RATE = 2.5;
+    const int MONTHS = 12;
+    const double CONVERSION = 0.01;
+
+    // Error Initialization Section
+    bool inputError = false;
+
+    // Input Section
+    char loanType;
+    double loanAmount;
+    int loanLength;
+
+    cout << "Enter amount to borrow: $";
+    cin >> loanAmount;
+    cout << "Enter type of loan (Enter: A or M): ";
+    cin >> loanType;
+    cout << "Enter number of months (Enter: 36, 48, or 60): ";
+    cin >> loanLength;
+
+    // Processing Section
+    if (loanAmount <= 0 || (loanType != 'A' && loanType != 'M') ||
+        (loanType == 'A' && (loanLength != 36 && loanLength != 48 && loanLength != 60)) ||
+        (loanType == 'M' && (loanLength != 15 && loanLength != 20 && loanLength != 30))) {
+        cout << "=====================Error====================" << endl;
+        cout << "Something went wrong. Invalid input provided." << endl;
+        cout << "==============================================" << endl;
+        inputError = true;
+    }
+
+    if (!inputError) {
+        double monthlyInterestRate;
+        if (loanType == 'A') {
+            if (loanLength == 36)
+                monthlyInterestRate = AUTO_36_APR;
+            else if (loanLength == 48)
+                monthlyInterestRate = AUTO_48_APR;
+            else if (loanLength == 60)
+                monthlyInterestRate = AUTO_60_APR;
+        }
+        else if (loanType == 'M') {
+            if (loanLength == 15)
+                monthlyInterestRate = MORT_15_APR;
+            else if (loanLength == 20)
+                monthlyInterestRate = MORT_20_APR;
+            else if (loanLength == 30)
+                monthlyInterestRate = MORT_30_APR;
+        }
+        if (loanAmount >= 200000.00)
+            monthlyInterestRate = monthlyInterestRate + ADDITIONAL_RATE;
+
+
+        // Calculate the monthly payment
+        double monthlyPayment = (loanAmount * (monthlyInterestRate * CONVERSION) / MONTHS) /
+            (1 - pow(1 + (monthlyInterestRate * CONVERSION) / MONTHS, -loanLength));
+        double totalPayment = monthlyPayment * loanLength;
+        double interestPaid = totalPayment - loanAmount;
+
+
+        // Final Output Section
+        cout << fixed << setprecision(2);
+        cout << "---- Loan Report for " << (loanType == 'A' ? "Auto Loan" : "Mortgage") << " ----" << endl;
+        cout << "Loan Amount:          $ " << setw(10) << loanAmount << endl;
+        cout << "Annual Interest Rate: % " << setw(10) << monthlyInterestRate << endl;
+        cout << "Number of Payments:     " << setw(10) << loanLength << endl;
+        cout << "Monthly Payment:      $ " << setw(10) << monthlyPayment << endl;
+        cout << "Total Payment:        $ " << setw(10) << totalPayment << endl;
+        cout << "Interest Paid:        $ " << setw(10) << interestPaid << endl;
+    }
+
+    return 0;
+}
