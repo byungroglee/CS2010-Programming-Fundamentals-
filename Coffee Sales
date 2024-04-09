@@ -1,0 +1,221 @@
+//======================================================================================================
+// Name                      : Byung Rog Lee
+// 
+// Course Name               : CS2010
+// 
+// Class Time                : Monday, Wednesday, Friday (2:30p.m. - 3:30p.m.)
+// 
+// Program Assignment Number : Program 3
+// 
+// Program File Name         : LeeB_pgm3
+// 
+// Dut Date                  : October 6th 2023
+// 
+// Purpose                   : The purpose of this program is to calculate different types of coffee
+//                             depending on its flavor strength
+// 
+// Input                     : This program requires input data of a character selecting the type of
+//                             drink, a single digit indicating coffee strength and payment amount until
+//                             the total payment(s) entered meet or exceed the calculated cost
+// 
+// Processing                : There are three 'Input & Process & Output Sections' for types of coffee,
+//                             strength of coffee and payment for coffee.
+// 
+// Output                    : Output sections are included in 'Input & Process & Output Sections'.
+//
+// Reflection                : Except for the calculation part, I could cover pretty much everything.
+//                             This programs was a good practice for training do-while statement.
+//  
+//=======================================================================================================
+
+
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+int main() {
+    // Declaration Section
+    const double BREWED = 2.93;
+    const double ESPRESSO = 4.39;
+    const double CAPPUCCINO = 4.99;
+    const double LATTE = 5.47;
+    const double DARK_COFFEE_COST = 0.23;
+
+    char coffeeChoice;
+    int coffeeStrength;
+    
+    double paymentAmount;
+    double costCoffeeType = 0.0;
+    double amountOwed;
+    double change;
+    double additionalAmount;
+
+
+
+
+
+    // Menu Display Section
+    cout << "--------------------------------------------" << endl;
+    cout << "B - Brewed " << setw(29) << "$" << BREWED << endl;
+    cout << "E - Espresso " << setw(27) << "$" << ESPRESSO << endl;
+    cout << "C - Cappuccino " << setw(25) << "$" << CAPPUCCINO << endl;
+    cout << "L - Latte " << setw(30) << "$" << LATTE << endl;
+    cout << "Q - Quit" << endl;
+    cout << "--------------------------------------------" << endl;
+
+
+
+
+
+    // Input & Process & Output Section (1. Coffee Type Selection)
+    bool validInput = false;
+    do {
+        cout << "Enter your choice of coffee: ";
+        cin >> coffeeChoice;
+
+        switch (coffeeChoice) {
+        case 'B':
+            costCoffeeType = BREWED;
+            validInput = true;
+            break;
+        case 'E':
+            costCoffeeType = ESPRESSO;
+            validInput = true;
+            break;
+        case 'C':
+            costCoffeeType = CAPPUCCINO;
+            validInput = true;
+            break;
+        case 'L':
+            costCoffeeType = LATTE;
+            validInput = true;
+            break;
+        case 'Q':
+            cout << "Goodbye!" << endl;
+            return 0;
+        default:
+            cout << "ERROR. Invalid choice. Please select a valid coffee." << endl;
+        }
+    } while (!validInput);
+
+
+
+
+
+    // Input & Process & Output Section (2. Coffee Strength Section)
+    validInput = false;
+    do {
+        cout << "--------------------------------------------" << endl;
+        cout << "1 - Light, 2 - Regular, 3 - Dark:";
+        cin >> coffeeStrength;
+
+        if (coffeeStrength >= 1 && coffeeStrength <= 3) {
+            validInput = true;
+        }
+        else {
+            cout << "ERROR. Invalid choice. Please select a valid coffee strength." << endl;
+        }
+    } while (!validInput);
+
+    if (coffeeStrength == 3) {
+        costCoffeeType += DARK_COFFEE_COST;
+    }
+
+    cout << "--------------------------------------------" << endl;
+    cout << "Select your coffee strength: " << coffeeStrength << endl;
+    cout << "--------------------------------------------" << endl;
+
+
+
+
+
+    // Output Section (1. Coffee Type & Coffee Strength)
+    if (coffeeChoice == 'B') {
+        if (coffeeStrength == 1) {
+            cout << "You have ordered a " << "Light " << "Brewed" << endl;
+        }
+        else if (coffeeStrength == 2) {
+            cout << "You have ordered a " << "Regualr " << "Brewed" << endl;
+        }
+        else if (coffeeStrength == 3) {
+            cout << "You have ordered a " << "Dark " << "Brewed" << endl;
+        }
+    }
+    else if (coffeeChoice == 'E') {
+        if (coffeeStrength == 1) {
+            cout << "You have ordered a " << "Light " << "Espresso" << endl;
+        }
+        else if (coffeeStrength == 2) {
+            cout << "You have ordered a " << "Regualr " << "Espresso" << endl;
+        }
+        else if (coffeeStrength == 3) {
+            cout << "You have ordered a " << "Dark " << "Espresso" << endl;
+        }
+    }
+    else if (coffeeChoice == 'C') {
+        if (coffeeStrength == 1) {
+            cout << "You have ordered a " << "Light " << "Cappuccino" << endl;
+        }
+        else if (coffeeStrength == 2) {
+            cout << "You have ordered a " << "Regualr " << "Cappuccino" << endl;
+        }
+        else if (coffeeStrength == 3) {
+            cout << "You have ordered a " << "Dark " << "Cappucino" << endl;
+        }
+    }
+    else if (coffeeChoice == 'L') {
+        if (coffeeStrength == 1) {
+            cout << "You have ordered a " << "Light " << "Latte" << endl;
+        }
+        else if (coffeeStrength == 2) {
+            cout << "You have ordered a " << "Regualr " << "Latte" << endl;
+        }
+        else if (coffeeStrength == 3) {
+            cout << "You have ordered a " << "Dark " << "Latte" << endl;
+        }
+    }
+
+    cout << "Your coffee will cost $" << fixed << setprecision(2) << costCoffeeType << endl;
+    cout << "--------------------------------------------" << endl;
+
+
+
+
+
+    // Input & Process & Output Section (3. Payment)
+    cout << "Please enter amount paid: $";
+    cin >> paymentAmount;
+    
+    // Payment Calculation & Input Section (3. Payment)
+    if (paymentAmount < costCoffeeType) {
+        while (paymentAmount < costCoffeeType) {
+            costCoffeeType -= paymentAmount;
+            cout << "You still owe: $" << costCoffeeType << endl;
+            cout << "Please enter amount paid: $";
+            cin >> paymentAmount;
+        }
+    }
+    else if (paymentAmount == costCoffeeType) {
+        cout << "Your change is: $0.00" << endl;
+    }
+    else if (paymentAmount > costCoffeeType) {
+        change = paymentAmount - costCoffeeType;
+        cout << "Your change is: $" << change << endl;
+    }
+
+    cout << "--------------------------------------------" << endl;
+    cout << endl;
+    cout << endl;
+    cout << endl;
+    cout << endl;
+    cout << endl;
+    cout << endl;
+    cout << endl;
+    cout << endl;
+    cout << endl;
+    cout << endl;
+    cout << endl;
+    cout << endl;
+
+    return 0;
+}
