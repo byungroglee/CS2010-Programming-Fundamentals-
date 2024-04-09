@@ -1,0 +1,198 @@
+//================================================================================================================
+// Name                      : Byung Rog Lee
+// 
+// Course Name               : CS2010
+// 
+// Class Time                : Monday, Wednesday, Friday (2:30p.m. - 3:30p.m.)
+// 
+// Program Assignment Number : Program 6
+// 
+// Program File Name         : LeeB_pgm6
+// 
+// Dut Date                  : November 13th 2023
+// 
+// Purpose                   : The purpose of this program is to read the grades of three different chapters
+//                             of a class, analyze the grades by computing the total grades, finding the
+//                             average, highest, lowest, and computing the ABC rate of the class.
+// 
+// Input                     : Grades of chapter 01, chapter 02, and chapter 03 are stored in a file named
+//                             'roster.txt'.
+// 
+// Processing                : The C++ program involves managing and analyzing student grades across three
+//                             chapters. It declares arrays to store grades for each chapter and a separate array
+//                             for each chapter and a separate array for total grades per student. A function
+//                             reads data from an input file, populates arrays, and computes total grades. Another
+//                             function prints the stored data. After printing a line of "*", the program converts
+//                             grades to percentages and displays them with letter grades using a specified 
+//                             scale. It then calculates and prints the average total score, highest and lowest
+//                             scores, and the ABC rate of the class, based on grades >= 72%.
+// 
+// Output                    : The program generates output of the average total score, highest score, lowest
+//                             score and the computed ABC rate.
+//
+// Reflection                : Organizing rows of functions was a time-consuming job but the overall level of 
+//                             difficulty was not that hard.
+//  
+//================================================================================================================
+
+
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <iomanip>
+
+using namespace std;
+// FUNCTION SECTIONS
+void readRosterAndComputeTotal(double ch1[], double ch2[], double ch3[], double totalGrades[], int SIZE_CLASS) {
+
+    ifstream inFS; 
+
+    inFS.open("roster.txt"); 
+    
+    if (inFS.is_open()) {
+        for (int i = 0; i < SIZE_CLASS; ++i) {
+            inFS >> ch1[i] >> ch2[i] >> ch3[i];
+        }
+        for (int i = 0; i < SIZE_CLASS; ++i) {
+            totalGrades[i] = (ch1[i] + ch2[i] + ch3[i]);
+        }
+    }
+    else {
+        cout << "-e: could not open file." << endl;
+    }
+
+    inFS.close();
+
+}
+
+void printRoster(double ch1[], double ch2[], double ch3[], double totalGrades[], int SIZE_CLASS) {
+    cout << "The original roster:" << endl;
+    cout << "Student #" << setw(10) << setfill(' ') << "Ch01" 
+                        << setw(10) << setfill(' ') << "Ch02" 
+                        << setw(10) << setfill(' ') << "Ch03"
+                        << setw(11) << setfill(' ') << "Total" << endl;
+    cout << setw(80) << setfill('-') << "" << setfill(' ') << endl;
+
+    for (int i = 0; i < SIZE_CLASS; ++i) {
+        cout << setw(2) << setfill('0') << fixed << i + 1 
+             << setw(18) << setfill(' ') << right << setprecision(2) << ch1[i] 
+             << setw(10) << setfill(' ') << ch2[i] 
+             << setw(10) << setfill(' ') << ch3[i]
+             << setw(10) << setfill(' ') << totalGrades[i] << endl;
+
+    }
+
+}
+
+void convertToPercentage(double ch1[], double ch2[], double ch3[], double totalGrades[], int SIZE_CLASS) {
+    for (int i = 0; i < SIZE_CLASS; ++i) {
+        ch1[i] = (ch1[i] / 15) * 100;
+        ch2[i] = (ch2[i] / 15) * 100;
+        ch3[i] = (ch3[i] / 20) * 100;
+
+        totalGrades[i] = (totalGrades[i] / 50) * 100;
+    }
+
+}
+
+void printConvertedRosterWithLetterGrade(double ch1[], double ch2[], double ch3[], double totalGrades[], int SIZE_CLASS) {
+    char letterGrade;
+    cout << "The converted roster with letter grade:" << endl;
+    cout << "Student #" << setw(11) << setfill(' ') << "Ch01" 
+                        << setw(13) << setfill(' ') << "Ch02" 
+                        << setw(13) << setfill(' ') << "Ch03"
+                        << setw(13) << setfill(' ') << "Total" 
+                        << setw(18) << setfill(' ') << "Letter Grade" << endl;
+    cout << setw(80) << setfill('-') << "" << setfill(' ') << endl;
+
+
+    for (int i = 0; i < SIZE_CLASS; ++i) {
+        if (totalGrades[i] >= 92) {
+            letterGrade = 'A';
+        }
+        else if (totalGrades[i] >= 82) {
+            letterGrade = 'B';
+        }
+        else if (totalGrades[i] >= 72) {
+            letterGrade = 'C';
+        }
+        else if (totalGrades[i] >= 62) {
+            letterGrade = 'D';
+        }
+        else {
+            letterGrade = 'F';
+        }
+
+        cout << setw(2) << setfill('0') << fixed << i + 1 
+             << setw(19) << setfill(' ') << right << setprecision(2) << ch1[i] << " % " 
+             << setw(10) << setfill(' ') << ch2[i] << " % " 
+             << setw(10) << setfill(' ') << ch3[i] << " % " 
+             << setw(10) << setfill(' ') << totalGrades[i] << " % " 
+             << setw(3) << setfill(' ') << letterGrade << endl;
+    }
+
+}
+
+double computeAvgGrade(double totalGrades[], int SIZE_CLASS) {
+    double avgGrade = 0;
+    for (int i = 0; i < SIZE_CLASS; ++i) {
+        avgGrade = avgGrade + totalGrades[i];
+    }
+    return (avgGrade / SIZE_CLASS);
+}
+
+double findHighestScore(double totalGrades[], int SIZE_CLASS) {
+    double highestScore = 0;
+    for (int i = 0; i < SIZE_CLASS; ++i) {
+        if (totalGrades[i] > highestScore) {
+            highestScore = totalGrades[i];
+        }
+    }
+    return highestScore;
+}
+
+double findLowestScore(double totalGrades[], int SIZE_CLASS) {
+    double lowestScore = 1000;
+    for (int i = 0; i < SIZE_CLASS; ++i) {
+        if (totalGrades[i] < lowestScore) {
+            lowestScore = totalGrades[i];
+        }
+    }
+    return lowestScore;
+}
+
+double computeABCRate(double totalGrades[], int SIZE_CLASS) {
+    double abcRate = 0;
+    for (int i = 0; i < SIZE_CLASS; ++i) {
+        if (totalGrades[i] >= 72) {
+            ++abcRate;
+        }
+    }
+    return (abcRate / SIZE_CLASS) * 100;
+}
+
+// MAIN SECTION
+int main() {
+    // DECLARATION SECTION
+    const int SIZE_CLASS = 21;
+    double ch1[SIZE_CLASS];
+    double ch2[SIZE_CLASS];
+    double ch3[SIZE_CLASS];
+    double totalGrades[SIZE_CLASS];
+
+    // PROCESSING SECTION
+    readRosterAndComputeTotal(ch1, ch2, ch3, totalGrades, SIZE_CLASS);
+    printRoster(ch1, ch2, ch3, totalGrades, SIZE_CLASS);
+    cout << setw(80) << setfill('*') << "" << setfill(' ') << endl << endl;
+    convertToPercentage(ch1, ch2, ch3, totalGrades, SIZE_CLASS);
+    printConvertedRosterWithLetterGrade(ch1, ch2, ch3, totalGrades, SIZE_CLASS);
+   
+    // OUTPUT SECTION
+    cout << setw(80) << setfill('*') << "" << setfill(' ') << endl << endl;
+    cout << "The average total score of the class is: " << computeAvgGrade(totalGrades, SIZE_CLASS) << "%" << endl;
+    cout << "The highest score is: " << findHighestScore(totalGrades, SIZE_CLASS) << "%" << endl;
+    cout << "The lowest score is: " << findLowestScore(totalGrades, SIZE_CLASS) << "%" << endl;
+    cout << "The ABC rate of the class is: " << computeABCRate(totalGrades, SIZE_CLASS) << "%" << endl;
+
+    return 0;
+}
