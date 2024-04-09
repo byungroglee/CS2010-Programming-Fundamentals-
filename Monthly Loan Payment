@@ -1,0 +1,59 @@
+//==========================================================================
+//Program: The purpose of this program is to calculate monthly loan payments
+//
+//Process: Obtain input from user: loan type, length of loan, amount of 
+// loan and compute monthly payment.
+//
+//Results: Display details of the loan along with the calculated payment, 
+// total paid over the life of the loan, and total interest paid.
+//
+//Class: CS2020
+//
+//Section: 100x
+//
+//Term: Fall202x
+//
+//Author: Byung Rog Lee
+//
+//Reflection: Enter your reflection here. It is worth 1 point on the rubric.
+//============================================================================
+
+#include <iostream>
+#include <iomanip>
+using namespace std;
+int main()
+{
+
+
+	// Declaration
+	const double lowerDeck = 15.25;
+	const double upperDeck = 5.75;
+	const double setAside = 0.3;
+	double ticketSales;
+	double expenseAllo;
+	double profit;
+	double numLdeck;
+	double numUdeck;
+
+	// Input
+	cout << "How many lower deck tickets were sold: ";
+	cin >> numLdeck;
+	cout << "How many upper deck tickets were sold: ";
+	cin >> numUdeck;
+	cout << endl;
+
+	// Equations
+	ticketSales = numLdeck * lowerDeck + numUdeck * upperDeck;
+	expenseAllo = ticketSales * setAside;
+	profit = ticketSales - expenseAllo;
+
+	// Output
+	cout << "     Ticket Sales:   $" << ticketSales << endl;
+	cout << "         Expenses:   $" << expenseAllo << endl;
+	cout << "          Profits:   $" << profit << endl;
+
+	return 0;
+
+
+
+}
