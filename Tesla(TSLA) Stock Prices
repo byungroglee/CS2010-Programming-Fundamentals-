@@ -1,0 +1,138 @@
+//======================================================================================================
+// Name                      : Byung Rog Lee
+// 
+// Course Name               : CS2010
+// 
+// Class Time                : Monday, Wednesday, Friday (2:30p.m. - 3:30p.m.)
+// 
+// Program Assignment Number : Program 5
+// 
+// Program File Name         : LeeB_pgm5
+// 
+// Dut Date                  : October 29th 2023
+// 
+// Purpose                   : The purpose of this program is to analyze Tesla(TSLA) stock prices for
+//                             August 2023 and provide insight.
+// 
+// Input                     : The program reads trading dates and trading prices from the file named 
+//                             "pgm5.txt through the for loops.
+// 
+// Processing                : The program reads and processes the trading dates and trading prices within 
+//                             sentinelloop with eof(). It checks whether the array has negative value and
+//                             convert it into absolute value. After that, it keeps track of number of days
+//                             which excludes Saturday and Sunday. The first output section is included within
+//                             this sentinel loop and it is followed by section where it determines highest
+//                             and lowest price(and its dates).
+// 
+// Output                    : The program generates output of the program based on the processed input data
+//                             through the processing section. The first output display section is included within
+//                             the process section and the second output display section is written after the
+//                             processing section.
+//
+// Reflection                : The program was pretty straight forward and I did not really have difficulty
+//                             writing the program. I believe it was a good practice for me to get used to
+//                             utilizing array functions.
+//  
+//=======================================================================================================
+
+#include <iostream>
+#include <fstream>
+#include <iomanip>
+using namespace std;
+
+int main() {
+	// DECLARATION SECTION
+	const int MAX_TRADINGDAYS = 23;
+	ifstream infile;
+	string tradingDate[MAX_TRADINGDAYS];
+	int numDays;
+	int highestDay;
+	int lowestDay;
+	int i;
+	int j;
+	int highestIndex;
+	int lowestIndex;
+	double tradingPrice[MAX_TRADINGDAYS];
+	double highestPrice;
+	double lowestPrice;
+	double sumPrice = 0;
+
+
+
+	// FILE OPENING & ERROR CHECKING SECTION
+	infile.open("pgm5.txt");
+	if (!infile.is_open()) {
+		cout << "Coult not open file pgm5.txt." << endl;
+		return 1;
+	}
+
+	// PROCESS SECTION
+	while (!infile.eof()) {
+		
+		// INPUT SECTION
+		for (i = 0; i < MAX_TRADINGDAYS; ++i) {
+			infile >> tradingDate[i];
+			infile >> tradingPrice[i];
+
+			// CONVERSION OF NEGATIVE VALUE TO POSITIVE VALUE
+			if (tradingPrice[i] < 0) {
+				tradingPrice[i] = -tradingPrice[i];
+			}
+
+			// TRACKING NUMBER OF DAYS AND SUMMATION OF THE PRICES
+			numDays = i + 1;
+			sumPrice += tradingPrice[i];
+
+			// OUTPUT DISPLAY SECTION 1
+			cout << "Day " << numDays << " ";
+			cout << "Aug-" << tradingDate[i].substr(3, 2) << " ";
+			cout << "TSLA was trading at $";
+			cout << fixed << setprecision(2) << tradingPrice[i] << endl;
+
+			// DETERMINING HIGHEST AND LOWEST PRICE AND ITS DATE
+			if (i == 0) {
+				highestPrice = tradingPrice[i];
+				highestIndex = i;
+				highestDay = numDays;
+
+			}
+			else if (highestPrice < tradingPrice[i]) {
+				highestPrice = tradingPrice[i];
+				highestIndex = i;
+				highestDay = numDays;
+			}
+
+			if (i == 0) {
+				lowestPrice = tradingPrice[i];
+				lowestIndex = i;
+				lowestDay = numDays;
+			}
+			else if (lowestPrice > tradingPrice[i]) {
+				lowestPrice = tradingPrice[i];
+				lowestIndex = i;
+				lowestDay = numDays;
+			}
+
+
+		}
+		// OUTPUT DISPLAY SECTION 2
+		cout << "TSLA was trading as high as $";
+		cout << fixed << setprecision(2) << highestPrice << " on ";
+		cout << "Day " << highestDay << " ";
+		cout << "Aug-" << tradingDate[highestIndex].substr(3, 2) << "." << endl;
+
+		cout << "TSLA was trading as low as $";
+		cout << fixed << setprecision(2) << lowestPrice << " on ";
+		cout << "Day " << lowestDay << " ";
+		cout << "Aug-" << tradingDate[lowestIndex].substr(3, 2) << "." << endl;
+
+		cout << "The 23-day average price in August of TSLA is $";
+		cout << fixed << setprecision(2) << sumPrice / MAX_TRADINGDAYS << "." << endl;
+	}
+
+	// FILE CLOSING SECTION
+	infile.close();
+
+	return 0;
+
+}
