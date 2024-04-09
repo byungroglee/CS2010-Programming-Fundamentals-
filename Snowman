@@ -1,0 +1,359 @@
+//================================================================================================================
+// Name                      : Byung Rog Lee
+// 
+// Course Name               : CS2010
+// 
+// Class Time                : Monday, Wednesday, Friday (2:30p.m. - 3:30p.m.)
+// 
+// Program Assignment Number : Program 5
+// 
+// Program File Name         : LeeB_pgm5
+// 
+// Dut Date                  : December 3rd 2023
+// 
+// Purpose                   : The purpose of this program is to implement a word-guessing game called
+//                             "Snowman". The game involves two players: the computer, which selects a
+//                             secret word from a dictionary, and the player, who attempts to guess the
+//                             word. The player has eight chances to guess correctly, and with each
+//                             incorrect guess, a part of a snowman is displayed. The game continues until
+//                             the player either successgully guesses the word or exhaust the allowed number
+//                             of incorrect guesses.
+// 
+// Input                     : The program's input primarily involves the player interacting with the
+//                             Snowman word-guessing game. Players enter guesses for letters in the secret
+//                             word, with input validation ensuring single uppercase letters and providing
+//                             messages for invalid entries. Additionally, after each game, players decide 
+//                             whether to play again by entering 'Y' or 'N'. The input design aims to enhance
+//                             user engagement, guiding players through the game mechanics while incorporating
+//                             safeguards to handel potential errors and maintain a user-friendly experience.
+// 
+// Processing                : The processing section of the program drives the Snowman word-guessing game, 
+//                             with the computer selecting a random secret word from a dictionary. The player 
+//                             iteratively guesses letters, and the game updates the display to reveal correct
+//                             placements. Functions handle drawing the Snowman, checking for a win, displaying 
+//                             the game status, initializing guessed letters, and sorting the dictionary. 
+//                             The game loop continues until the player either wins or loses, with an outer 
+//                             loop allowing players to replay. The program maintains modularity using function
+//                             prototypes and avoids break or exit statements for loop control.
+// 
+// Output                    : The output section of the program involves displaying the game status, including 
+//                             the Snowman figure and the current placement of guessed letters within the secret 
+//                             word. If the player wins, a congratulatory message is shown; otherwise, a message 
+//                             indicates the loss and reveals the secret word. The program prompts the user to 
+//                             play again, and the outer loop continues as long as the player chooses to replay, 
+//                             ensuring a seamless gaming experience. The system("cls") statement is used to clear 
+//                             the console between games for better presentation. The final output adheres to 
+//                             specified formatting and clarity requirements.
+//
+// Reflection                : I think it was the most difficult and time-consuming program that I had during this
+//                             semester. At the same time, it was a good opportunity for me to review concepts in
+//                             previous chapters.
+//  
+//================================================================================================================
+
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+#include <ctime>
+#include <string>
+#include <cctype>
+
+using namespace std;
+
+// Function Prototypes
+int loadDictionary(string dict[]) {
+    ifstream inputFile;
+
+    inputFile.open("pgm7.txt");
+
+    if (!inputFile.is_open()) {
+        cout << "Could not open file pgm7.txt" << endl;
+        return 1;
+    }
+
+    int count = 0;
+    while (inputFile >> dict[count]) {
+        count++;
+    }
+
+    if (inputFile.fail() && !inputFile.eof()) {
+        cout << "Input failure before reaching end of file." << endl;
+    }
+
+    inputFile.close();
+    return count;
+}
+
+// Function to draw a snowman figure based on the current wrong turn
+void drawSnowman(int turn) {
+    char SM1 = static_cast<char>(193);
+    char SM2 = static_cast<char>(217);
+    char SM3 = static_cast<char>(192);
+    char SM4 = static_cast<char>(218);
+    char SM5 = static_cast<char>(191);
+    char SM6 = static_cast<char>(196);
+    char SM7 = static_cast<char>(179);
+    char SM8 = static_cast<char>(42);
+    char SM9 = static_cast<char>(64);
+    char SM10 = static_cast<char>(186);
+    char SM11 = static_cast<char>(188);
+    char SM12 = static_cast<char>(200);
+    char SM13 = static_cast<char>(197);
+    char SM14 = static_cast<char>(47);
+    char SM15 = static_cast<char>(92);
+    switch (turn) {
+    case 1:
+        cout << "     " << SM4 << SM6 << SM6 << SM6 << SM5 << endl;
+        cout << "     " << SM7 << "   " << SM7 << endl;
+        cout << "    " << SM6 << SM13 << SM6 << SM6 << SM6 << SM13 << SM6 << endl;
+        break;
+    case 2:
+        cout << "     " << SM4 << SM6 << SM6 << SM6 << SM5 << endl;
+        cout << "     " << SM7 << "   " << SM7 << endl;
+        cout << "    " << SM6 << SM13 << SM6 << SM6 << SM6 << SM13 << SM6 << endl;
+        cout << "     " << SM7 << SM8 << " " << SM8 << SM7 << endl;
+        cout << "     " << SM7 << " " << SM7 << " " << SM7 << endl;
+        cout << "    " << SM4 << SM1 << SM6 << SM6 << SM6 << SM1 << SM5 << endl;
+        break;
+    case 3:
+        cout << "     " << SM4 << SM6 << SM6 << SM6 << SM5 << endl;
+        cout << "     " << SM7 << "   " << SM7 << endl;
+        cout << "    " << SM6 << SM13 << SM6 << SM6 << SM6 << SM13 << SM6 << endl;
+        cout << "     " << SM7 << SM8 << " " << SM8 << SM7 << endl;
+        cout << "     " << SM7 << " " << SM7 << " " << SM7 << endl;
+        cout << "    " << SM4 << SM1 << SM6 << SM6 << SM6 << SM1 << SM5 << endl;
+        cout << "   " << " " << SM7 << "     " << SM7 << endl;
+        cout << "  " << " " << " " << SM7 << "  " << SM9 << "  " << SM7 << endl;
+        cout << "  " << "  " << SM7 << "     " << SM7 << endl;
+        cout << "   " << SM4 << SM1 << SM6 << SM6 << SM6 << SM6 << SM6 << SM1 << SM5 << endl;
+        break;
+    case 4:
+        cout << "     " << SM4 << SM6 << SM6 << SM6 << SM5 << endl;
+        cout << "     " << SM7 << "   " << SM7 << endl;
+        cout << "    " << SM6 << SM13 << SM6 << SM6 << SM6 << SM13 << SM6 << endl;
+        cout << "     " << SM7 << SM8 << " " << SM8 << SM7 << endl;
+        cout << "     " << SM7 << " " << SM7 << " " << SM7 << endl;
+        cout << "    " << SM4 << SM1 << SM6 << SM6 << SM6 << SM1 << SM5 << endl;
+        cout << "   " << SM14 << SM7 << "     " << SM7 << endl;
+        cout << "  " << SM14 << " " << SM7 << "  " << SM9 << "  " << SM7 << endl;
+        cout << " " << SM14 << "  " << SM7 << "     " << SM7 << endl;
+        cout << "   " << SM4 << SM1 << SM6 << SM6 << SM6 << SM6 << SM6 << SM1 << SM5 << endl;
+        break;
+    case 5:
+        cout << "     " << SM4 << SM6 << SM6 << SM6 << SM5 << endl;
+        cout << "     " << SM7 << "   " << SM7 << endl;
+        cout << "    " << SM6 << SM13 << SM6 << SM6 << SM6 << SM13 << SM6 << endl;
+        cout << "     " << SM7 << SM8 << " " << SM8 << SM7 << endl;
+        cout << "     " << SM7 << " " << SM7 << " " << SM7 << endl;
+        cout << "    " << SM4 << SM1 << SM6 << SM6 << SM6 << SM1 << SM5 << endl;
+        cout << "   " << SM14 << SM7 << "     " << SM7 << SM15 << endl;
+        cout << "  " << SM14 << " " << SM7 << "  " << SM9 << "  " << SM7 << " " << SM15 << endl;
+        cout << " " << SM14 << "  " << SM7 << "     " << SM7 << "  " << SM15 << endl;
+        cout << "   " << SM4 << SM1 << SM6 << SM6 << SM6 << SM6 << SM6 << SM1 << SM5 << endl;
+        break;
+    case 6:
+        cout << "     " << SM4 << SM6 << SM6 << SM6 << SM5 << endl;
+        cout << "     " << SM7 << "   " << SM7 << endl;
+        cout << "    " << SM6 << SM13 << SM6 << SM6 << SM6 << SM13 << SM6 << endl;
+        cout << "     " << SM7 << SM8 << " " << SM8 << SM7 << endl;
+        cout << "     " << SM7 << " " << SM7 << " " << SM7 << endl;
+        cout << "    " << SM4 << SM1 << SM6 << SM6 << SM6 << SM1 << SM5 << endl;
+        cout << "   " << SM14 << SM7 << "     " << SM7 << SM15 << endl;
+        cout << "  " << SM14 << " " << SM7 << "  " << SM9 << "  " << SM7 << " " << SM15 << endl;
+        cout << " " << SM14 << "  " << SM7 << "     " << SM7 << "  " << SM15 << endl;
+        cout << "   " << SM4 << SM1 << SM6 << SM6 << SM6 << SM6 << SM6 << SM1 << SM5 << endl;
+        cout << "   " << SM7 << "       " << SM7 << endl;
+        cout << "   " << SM7 << "   " << SM9 << "   " << SM7 << endl;
+        cout << "   " << SM7 << "       " << SM7 << endl;
+        cout << "   " << SM3 << SM6 << SM6 << SM6 << SM6 << SM6 << SM6 << SM6 << SM2 << endl;
+        break;
+    case 7:
+        cout << "     " << SM4 << SM6 << SM6 << SM6 << SM5 << endl;
+        cout << "     " << SM7 << "   " << SM7 << endl;
+        cout << "    " << SM6 << SM13 << SM6 << SM6 << SM6 << SM13 << SM6 << endl;
+        cout << "     " << SM7 << SM8 << " " << SM8 << SM7 << endl;
+        cout << "     " << SM7 << " " << SM7 << " " << SM7 << endl;
+        cout << "    " << SM4 << SM1 << SM6 << SM6 << SM6 << SM1 << SM5 << endl;
+        cout << "   " << SM14 << SM7 << "     " << SM7 << SM15 << endl;
+        cout << "  " << SM14 << " " << SM7 << "  " << SM9 << "  " << SM7 << " " << SM15 << endl;
+        cout << " " << SM14 << "  " << SM7 << "     " << SM7 << "  " << SM15 << endl;
+        cout << "   " << SM4 << SM1 << SM6 << SM6 << SM6 << SM6 << SM6 << SM1 << SM5 << endl;
+        cout << "   " << SM7 << "       " << SM7 << endl;
+        cout << "   " << SM7 << "   " << SM9 << "   " << SM7 << endl;
+        cout << "   " << SM7 << "       " << SM7 << endl;
+        cout << "   " << SM3 << SM6 << SM6 << SM6 << SM6 << SM6 << SM6 << SM6 << SM2 << endl;
+        cout << endl;
+        cout << "     " << SM10 << endl;
+        cout << "     " << SM11 << endl;
+        break;
+    case 8:
+        cout << "     " << SM4 << SM6 << SM6 << SM6 << SM5 << endl;
+        cout << "     " << SM7 << "   " << SM7 << endl;
+        cout << "    " << SM6 << SM13 << SM6 << SM6 << SM6 << SM13 << SM6 << endl;
+        cout << "     " << SM7 << SM8 << " " << SM8 << SM7 << endl;
+        cout << "     " << SM7 << " " << SM7 << " " << SM7 << endl;
+        cout << "    " << SM4 << SM1 << SM6 << SM6 << SM6 << SM1 << SM5 << endl;
+        cout << "   " << SM14 << SM7 << "     " << SM7 << SM15 << endl;
+        cout << "  " << SM14 << " " << SM7 << "  " << SM9 << "  " << SM7 << " " << SM15 << endl;
+        cout << " " << SM14 << "  " << SM7 << "     " << SM7 << "  " << SM15 << endl;
+        cout << "   " << SM4 << SM1 << SM6 << SM6 << SM6 << SM6 << SM6 << SM1 << SM5 << endl;
+        cout << "   " << SM7 << "       " << SM7 << endl;
+        cout << "   " << SM7 << "   " << SM9 << "   " << SM7 << endl;
+        cout << "   " << SM7 << "       " << SM7 << endl;
+        cout << "   " << SM3 << SM6 << SM6 << SM6 << SM6 << SM6 << SM6 << SM6 << SM2 << endl;
+        cout << endl;
+        cout << "     " << SM10 << "   " << SM10 << endl;
+        cout << "     " << SM11 << "   " << SM12 << endl;
+        break;
+    default:
+        break;
+    }
+}
+
+
+// Function to get the next guess from the player via the console window
+char getGuess() {
+    char guess;
+    cout << "Enter your guess: ";
+    cin >> guess;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Clear the input buffer
+    return tolower(guess); // Convert to lowercase for case insensitivity
+}
+
+// Function to randomly select an index to the dictionary array and load the secret word
+int setSecretWord(char secret[], string dict[], int wordcount) {
+    int index = rand() % wordcount;
+    string selectedWord = dict[index];
+
+    int length = selectedWord.length();
+    for (int i = 0; i < length; ++i) {
+        secret[i] = selectedWord[i];
+    }
+
+    return length;
+}
+
+// Function to show the current game status
+void showStatus(char guesses[], int secretlen) {
+    for (int i = 0; i < secretlen; ++i) {
+        if (isalpha(guesses[i])) {
+            cout << " " << guesses[i] << " ";
+        }
+        else {
+            cout << " _ ";
+        }
+    }
+    cout << endl;
+}
+
+// Function to initialize each element of the char array of guessed letters
+void initGuess(char guesses[], int secretlen) {
+    for (int i = 0; i < secretlen; ++i) {
+        guesses[i] = '_';
+    }
+}
+
+// Function to record the guessed letter in the array of guessed letters
+bool recordGuess(char secret[], char guesses[], char letter, int secretlen) {
+    bool correctGuess = false;
+    for (int i = 0; i < secretlen; ++i) {
+        if (secret[i] == letter) {
+            guesses[i] = letter;
+            correctGuess = true;
+        }
+    }
+    return correctGuess;
+}
+
+// Function to check if the player has won
+bool isWin(char guesses[], int secretlen) {
+    for (int i = 0; i < secretlen; ++i) {
+        if (!isalpha(guesses[i])) {
+            return false; // There is still an underscore, the word is not fully guessed
+        }
+    }
+    return true; // All letters have been guessed
+}
+
+// Function to reveal the secret word
+void showSecret(char secret[], int secretlen) {
+    for (int i = 0; i < secretlen; ++i) {
+        cout << secret[i];
+    }
+}
+
+// Bubble sort algorithm to sort the array in descending order
+void bubbleSort(string dictionary[], int size) {
+    for (int i = 0; i < size - 1; ++i) {
+        for (int j = 0; j < size - i - 1; ++j) {
+            if (dictionary[j] < dictionary[j + 1]) {
+                swap(dictionary[j], dictionary[j + 1]);
+            }
+        }
+    }
+}
+
+int main() {
+    srand(static_cast<unsigned>(time(0)));
+
+    const int MAX_WORDS = 100;
+    const int MAX_WORD_LENGTH = 25;
+
+    string dictionary[MAX_WORDS];
+    char secret[MAX_WORD_LENGTH];
+    char guesses[MAX_WORD_LENGTH];
+
+    int wordCount = loadDictionary(dictionary);
+    bubbleSort(dictionary, wordCount);
+
+    char playAgain;
+
+    do {
+        int wrongGuesses = 0;
+        bool win = false;
+        string wrongGuessList;
+
+        int secretLen = setSecretWord(secret, dictionary, wordCount);
+        initGuess(guesses, secretLen);
+
+        do {
+            system("cls");
+            drawSnowman(wrongGuesses);
+            showStatus(guesses, secretLen);
+
+            char guess = getGuess();
+
+            if (!recordGuess(secret, guesses, guess, secretLen)) {
+                wrongGuesses++;
+                wrongGuessList += guess;
+            }
+
+            if (isWin(guesses, secretLen)) {
+                win = true;
+                break;
+            }
+        } while (wrongGuesses < 8);
+
+        system("cls");
+        drawSnowman(wrongGuesses);
+        showStatus(guesses, secretLen);
+
+        if (win) {
+            cout << "Congratulations! You won!\n";
+        }
+        else {
+            cout << "Sorry! You lost. The secret word was ";
+            showSecret(secret, secretLen);
+            cout << endl;
+        }
+
+        cout << "Do you want to play again? (Y/N): ";
+        cin >> playAgain;
+        cin.ignore(); // Clear the newline character from the input buffer
+
+    } while (toupper(playAgain) == 'Y');
+
+    return 0;
+}
+
+// Function Definitions...
